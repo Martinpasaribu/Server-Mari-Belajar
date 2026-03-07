@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        .container { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #f0f0f0; border-radius: 12px; overflow: hidden; }
+        .header { background-color: #6366f1; padding: 40px 20px; text-align: center; color: white; }
+        .content { padding: 30px; line-height: 1.6; color: #334155; }
+        .invoice-card { background-color: #f8fafc; border-radius: 8px; padding: 20px; margin: 25px 0; border: 1px solid #e2e8f0; }
+        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .footer { padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; background-color: #f1f5f9; }
+        .button { background-color: #6366f1; color: white !important; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 20px; }
+        .status-badge { background-color: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        code { background: #e2e8f0; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="margin:0; font-size: 24px;">Pembayaran Berhasil!</h1>
+            <p style="margin:10px 0 0 0; opacity: 0.8;">Akses modul kamu sudah aktif 🚀</p>
+        </div>
+        
+        <div class="content">
+            <p>Halo <strong><%= locals.name || 'Pelanggan' %></strong>,</p>
+            <p>Terima kasih telah bergabung. Pembayaran kamu telah berhasil divalidasi oleh sistem kami. Kamu sekarang memiliki akses penuh ke modul berikut:</p>
+            
+            <div class="invoice-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">
+                    <span style="font-weight: bold; font-size: 16px;">Detail Transaksi</span>
+                    <span class="status-badge">Paid</span>
+                </div>
+                
+                <div class="invoice-row">
+                    <span>Modul:</span>
+                    <strong><%= locals.moduleName || 'Modul Belajar' %></strong>
+                </div>
+                
+                <div class="invoice-row">
+                    <span>Order ID:</span>
+                    <code><%= locals.orderId || '-' %></code>
+                </div>
+                
+                <div class="invoice-row">
+                    <span>Tanggal:</span>
+                    <span><%= locals.date || '-' %></span>
+                </div>
+                
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 2px dashed #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold;">Total Bayar:</span>
+                    <span style="font-weight: bold; color: #6366f1; font-size: 18px;">Rp <%= locals.amount || '0' %></span>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <p style="font-size: 14px; margin-bottom: 25px;">Klik tombol di bawah ini untuk langsung menuju kelas kamu.</p>
+                <a href="https://yourdomain.com/dashboard/modules" class="button">Mulai Belajar Sekarang</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Mari Belajar. Semua hak dilindungi undang-undang.</p>
+            <p>Jika kamu mengalami kendala, hubungi kami di support@yourdomain.com</p>
+        </div>
+    </div>
+</body>
+</html>

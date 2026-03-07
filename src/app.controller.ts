@@ -5,6 +5,6 @@ import { Controller, Get } from '@nestjs/common';
 export class AppController {
   @Get()
   getRoot(): string {
-    return 'Selamat datang di API NestJS';
+    return 'Selamat datang di API Mari Belajar';
   }
 }

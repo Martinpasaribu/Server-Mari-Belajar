@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    // "strictPropertyInitialization": false,
     "declaration": true,
     "esModuleInterop": true,
     "removeComments": true,

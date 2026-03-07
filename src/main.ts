@@ -1,24 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { json, urlencoded } from 'express';
-// import { RateLimitMiddleware } from './common/middleware/rate-limit.middleware';
+import { RateLimitMiddleware } from './common/middleware/rate-limit.middleware';
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-app.enableCors({
-  origin: ['http://localhost:3000','http://localhost:3001', 'https://www.clickusaha.com','https://management-clickusaha.vercel.app'], // array of allowed origins
-  credentials: true, // izinkan kirim cookie/token cross-origin
-});
+  app.enableCors({
+    origin: ['http://localhost:3000','http://localhost:3001', 'http://localhost:3002', 'https://www.clickusaha.com','https://management-clickusaha.vercel.app'], // array of allowed origins
+    credentials: true, // izinkan kirim cookie/token cross-origin
+  });
 
-// Naikkan limit body parser express
-app.use(json({ limit: '10mb' }));
-app.use(urlencoded({ extended: true, limit: '10mb' }));
+  // Naikkan limit body parser express
+  app.use(json({ limit: '10mb' }));
+  app.use(urlencoded({ extended: true, limit: '10mb' }));
+
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true, // INI KUNCINYA
+      transformOptions: {
+        enableImplicitConversion: true, // Tambahkan ini juga
+      },  
+  }));
 
 // cek
     // Middleware global

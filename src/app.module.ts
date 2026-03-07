@@ -4,14 +4,27 @@ import { MongooseModule, InjectConnection } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
 import { AppController } from './app.controller';
-import { BlogModule } from './blog/blog.module';
+
 // import { RedisModule } from '@nestjs-modules/ioredis';
-import { RedisProvider } from './config/redis.provider';
-import { AuthorModule } from './author/author.module';
-import { OrdersModule } from './orders/orders.module';
+// import { RedisProvider } from './config/redis.provider';
+
 import { VisitorModule } from './visitor/visitor.module';
-import { UserModule } from './user/user_module';
-import { KycModule } from './kyc/kyc.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { MediaModule } from './modules/media/media.module';
+import { BabModule } from './modules/bab/bab.module';
+import { QuestionModule } from './modules/question/question.module';
+import { EnrollmentModule } from './modules/enrollments/enrollments.module';
+import { SubCategoriesModule } from './modules/sub-categories/sub-categories.module';
+import { AttemptsModule } from './modules/attempts/attempts.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { AuthModule } from './modules/auth/auth.module';
+import { CatalogsModule } from './modules/catalogs/catalogs.module';
+import { MidtransModule } from './modules/midtrans/midtrans.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { mailerConfig } from './config/email_sender/mailer.config';
+import { DeliveryModule } from './modules/delivery/delivery.module';
+import { StatusModule } from './modules/status/status.module';
+
 
 @Module({
   imports: [
@@ -33,13 +46,26 @@ import { KycModule } from './kyc/kyc.module';
       inject: [ConfigService],
       connectionName: 'usersConnection', // 👈 penting!
     }),
+
+    MailerModule.forRootAsync({
+      useFactory: () => mailerConfig(),
+    }),
     
-    UserModule,
-    BlogModule,
-    AuthorModule,
-    OrdersModule,
     VisitorModule,
-    KycModule
+    CategoriesModule,
+    SubCategoriesModule,
+    MediaModule,
+    AuthModule,
+    BabModule,
+    QuestionModule,
+    EnrollmentModule,
+    AttemptsModule,
+    ScheduleModule.forRoot(),
+    CatalogsModule,
+    MidtransModule,
+    DeliveryModule,
+    StatusModule,
+
     // RedisModule.forRootAsync({
     //   imports: [ConfigModule],
     //   inject: [ConfigService],
@@ -49,8 +75,9 @@ import { KycModule } from './kyc/kyc.module';
     //   }),
     // }),
   ],
-  providers: [RedisProvider],
-  exports: [RedisProvider],
+
+  providers: [],
+  exports: [],
   
   controllers: [AppController],
 })
