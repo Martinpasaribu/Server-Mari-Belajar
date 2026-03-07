@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import 'module-alias/register';
 import { NestFactory } from '@nestjs/core';
+
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { json, urlencoded } from 'express';
 import { RateLimitMiddleware } from './common/middleware/rate-limit.middleware';
-import 'tsconfig-paths/register';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
