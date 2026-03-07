@@ -29,7 +29,7 @@ async function bootstrap() {
       },  
   }));
 
-// cek
+// ceks
     // Middleware global
   // eslint-disable-next-line @typescript-eslint/unbound-method
   // app.use(new RateLimitMiddleware().use);
