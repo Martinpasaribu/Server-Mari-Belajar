@@ -1,7 +1,7 @@
 // src/modules/categories/dto/create-category.dto.ts
 import { IsString, IsOptional, IsNumber, IsBoolean, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { MediaObjectDto } from 'src/modules/media/dto/create-media.dto';
+import { MediaObjectDto } from '../../media/dto/create-media.dto';
 import { Type } from 'class-transformer';
 
 export class CreateCategoryDto {

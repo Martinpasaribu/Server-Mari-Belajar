@@ -13,7 +13,7 @@ import {
   IsArray,
   ValidateNested
 } from 'class-validator';
-import { MediaObjectDto } from 'src/modules/media/dto/create-media.dto';
+import { MediaObjectDto } from '../../media/dto/create-media.dto';
 import { Transform, Type } from 'class-transformer';
 import { Types } from 'mongoose';
 

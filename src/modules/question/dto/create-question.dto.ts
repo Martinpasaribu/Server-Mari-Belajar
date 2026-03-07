@@ -7,7 +7,7 @@ import {
   IsArray, ValidateNested, IsMongoId, IsBoolean 
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { MediaObjectDto } from 'src/modules/media/dto/create-media.dto';
+import { MediaObjectDto } from '../../media/dto/create-media.dto';
 import { Types } from 'mongoose';
 
 class OptionDto {
