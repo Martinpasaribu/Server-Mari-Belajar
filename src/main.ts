@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   app.enableCors({
-    origin: ['http://localhost:3000','http://localhost:3001', 'http://localhost:3002', 'https://www.clickusaha.com','https://management-clickusaha.vercel.app'], // array of allowed origins
+    origin: ['http://localhost:3000','http://localhost:3001', 'http://localhost:3002', 'https://www.clickusaha.com','https://management-clickusaha.vercel.app','https://client-mari-belajar.vercel.app'], // array of allowed origins
     credentials: true, // izinkan kirim cookie/token cross-origin
   });
 
