@@ -8,7 +8,7 @@ import { StartAttemptDto, SubmitAttemptDto } from './dto/create-attempt.dto';
 import { randomUUID } from 'crypto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { AccessGuard } from 'src/common/guards/access.guard';
+import { AccessGuard } from '../../common/guards/access.guard';
 
 @ApiTags('Attempts')
 @Controller('attempts')

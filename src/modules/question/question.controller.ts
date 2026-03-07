@@ -5,7 +5,7 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { randomUUID } from 'crypto';
 import { AuthGuard } from '@nestjs/passport';
-import { AccessGuard } from 'src/common/guards/access.guard';
+import { AccessGuard } from '../../common/guards/access.guard';
 
 @ApiTags('Questions')
 @Controller('questions')

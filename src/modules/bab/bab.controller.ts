@@ -8,7 +8,7 @@ import { UpdateBabDto } from './dto/update-bab.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { randomUUID } from 'crypto';
 import { AuthGuard } from '@nestjs/passport';
-import { AccessGuard } from 'src/common/guards/access.guard';
+import { AccessGuard } from '../../common/guards/access.guard';
 
 @ApiTags('Bab (Materi)')
 @Controller('bab')

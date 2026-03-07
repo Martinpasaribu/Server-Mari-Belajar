@@ -5,7 +5,7 @@
 import { Prop, Schema, SchemaFactory  } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { MediaObject, MediaObjectSchema } from '../../media/schema/media.schema';
-import { Question } from 'src/modules/question/schemas/question.schema';
+// import { Question } from 'src/modules/question/schemas/question.schema';
 
 @Schema({ 
   timestamps: true, 
