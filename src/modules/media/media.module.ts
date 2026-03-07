@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { MediaService } from './media.service';
 import { MediaController } from './media.controller';
-import { ImageKitService } from 'src/config/imagekit.service';
+import { ImageKitService } from '../../config/imagekit.service';
 
 
 @Module({
