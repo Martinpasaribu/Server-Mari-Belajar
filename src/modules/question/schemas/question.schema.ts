@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { MediaObject, MediaObjectSchema } from 'src/modules/media/schema/media.schema';
+import { MediaObject, MediaObjectSchema } from '../../media/schema/media.schema';
 
 @Schema({ _id: false })
 class Option {
