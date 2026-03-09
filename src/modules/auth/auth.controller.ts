@@ -58,7 +58,7 @@ export class AuthController {
     
     // 2. Redirect ke halaman callback di Next.js sambil membawa token
     // Sesuaikan URL frontend kamu (localhost:3000)
-    const frontendUrl = `http://localhost:3000/auth/callback?token=${result.access_token}`;
+    const frontendUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${result.access_token}`;
     
     return res.redirect(frontendUrl);
   }
