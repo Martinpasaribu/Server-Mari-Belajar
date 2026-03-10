@@ -35,12 +35,21 @@ export class CategoriesController {
 
   }
 
+  // Ambil option pilihan category
+  @Get('options')
+  findOptionCategory() {
+    return this.categoriesService.findOptionsCategory();
+  }
+
+
   // Ambil Satu berdasarkan ID string MongoDB
   @Get(':id')
   findOne(@Param('id') id: string) {
     // Hapus tanda '+' karena MongoDB ID adalah string
     return this.categoriesService.findOne(id);
   }
+
+
 
 // src/modules/categories/categories.controller.ts
 

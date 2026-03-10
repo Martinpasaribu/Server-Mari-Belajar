@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable max-len */
-import { Injectable, NotFoundException, ConflictException, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Bab } from './schemas/bab.schema';
@@ -36,7 +36,7 @@ export class BabService {
     return await newBab.save();
   }
 
-  // Soal Attampt DIambil
+  // Soal Attampt DIambil ( Sudah Login )
   async findQuestionsByBab(id: string): Promise<any> {
     const bab = await this.babModel
       .findOne({ _id: id, isDeleted: false })
@@ -52,6 +52,38 @@ export class BabService {
     return {
       questions: bab.question_keys,
       duration: bab.duration || 30 // Mengambil durasi dari DB jika ada
+    };
+  }
+
+  async findQuestionsByBabGuest(id: string): Promise<any> {
+    // 1. Cari Bab tanpa memfilter isFree terlebih dahulu
+    const bab = await this.babModel
+      .findOne({ _id: id, isDeleted: false })
+      .populate({
+        path: 'question_keys',
+        match: { isDeleted: false },
+        options: { sort: { order: 1 } }
+      })
+      .exec();
+
+    // 2. Cek apakah Bab memang benar-benar ada di DB
+    if (!bab) {
+      throw new NotFoundException('Bab tidak ditemukan. Silakan periksa kembali link Anda.');
+    }
+
+    // 3. Cek apakah Bab ini gratis untuk Guest
+    // Jika bab.isFree === false, maka kita lempar Forbidden atau Unauthorized
+    if (!bab.isFree) {
+      throw new ForbiddenException(
+        'Materi ini eksklusif untuk member. Silakan login atau beli paket untuk mengakses soal ini.'
+      );
+    }
+
+    // 4. Jika lolos semua pengecekan, kembalikan data
+    return {
+      questions: bab.question_keys,
+      duration: bab.duration || 30,
+      babName: bab.name // Tambahan informasi untuk UI
     };
   }
   
@@ -90,7 +122,7 @@ export class BabService {
         isActive: true 
       })
       .populate('sub_category_key') // Ambil data lengkap Sub-Category
-      .populate('question_keys')
+      // .populate('question_keys')
       .sort({ order: 1 })
       .exec();
 

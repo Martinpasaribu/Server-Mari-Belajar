@@ -48,6 +48,17 @@ export class CategoriesService {
       .exec();
   }
 
+    // 2. Ambil Semua (Dengan hitungan sub-category otomatis)
+  async findOptionsCategory(): Promise<Category[]> {
+    return await this.categoryModel
+      .find({ isDeleted: false })
+      .populate('subCategoryCount') // Memanggil virtual field yang kita buat di schema
+      .select('_id name')
+      .sort({ order: 1 }) // Urutkan berdasarkan urutan manual
+      .lean()
+      .exec()
+  }
+
   // 3. Ambil Satu Berdasarkan ID
   async findOne(id: string): Promise<Category> {
     const category = await this.categoryModel

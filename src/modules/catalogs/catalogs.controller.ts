@@ -17,6 +17,13 @@ export class CatalogController {
     };
   }
 
+  // Mengambil data catalog berdasarkaan id categpry
+  @Get('category/:id')
+  async findListCatalogsByCategory(@Param('id') id: string) {
+    const data = await this.catalogService.findListCatalogsByCategory(id);
+    return data
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.catalogService.getCatalogById(id);
@@ -25,4 +32,5 @@ export class CatalogController {
       data: data
     }; 
   }
+
 }

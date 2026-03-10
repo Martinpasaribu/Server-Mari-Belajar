@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // src/modules/categories/categories.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,6 +15,6 @@ import { MediaModule } from '../media/media.module';
   ],
   controllers: [CategoriesController],
   providers: [CategoriesService],
-  exports: [CategoriesService], // Export agar bisa dipakai module lain (misal: SubCategory)
+  exports: [CategoriesService, MongooseModule], // Export agar bisa dipakai module lain (misal: SubCategory)
 })
 export class CategoriesModule {}

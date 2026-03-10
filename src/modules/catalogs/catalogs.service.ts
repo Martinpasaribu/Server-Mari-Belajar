@@ -7,12 +7,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { SubCategory } from '../sub-categories/schemas/sub-category.schema';
 import { Model, Types } from 'mongoose';
 import { Bab } from '../bab/schemas/bab.schema';
+import { Category } from '../categories/schemas/category.schema';
 
 @Injectable()
 export class CatalogService {
   constructor(
     @InjectModel(SubCategory.name) private subCategoryModel: Model<SubCategory>,
     @InjectModel(Bab.name) private babModel: Model<Bab>,
+    @InjectModel(Category.name) private categoryModel: Model<Category>,
   ) {}
 
   /**
@@ -61,6 +63,42 @@ export class CatalogService {
         catalog,
         bab
       };
+  }
+
+
+  /**
+   * Mencari daftar katalog (sub-categories) berdasarkan ID Category
+   */
+  async findListCatalogsByCategory(id: string) {
+    // 1. Validasi ID dan cari Kategorinya terlebih dahulu
+    const category = await this.categoryModel
+      .findOne({ 
+        _id: id, // Gunakan ID yang dikirim sebagai filter
+        isDeleted: false 
+      })
+      .exec();
+
+    if (!category) {
+      throw new NotFoundException(`Kategori dengan ID ${id} tidak ditemukan`);
+    }
+
+    // 2. Cari semua sub-category (katalog) yang memiliki category_key tersebut
+    const listCatalogs = await this.subCategoryModel
+      .find({ 
+        category_key: new Types.ObjectId(id), 
+        isDeleted: false 
+      })
+      .populate('category_key', 'name') // Ambil nama kategori saja
+      .sort({ order: 1 }) // Urutkan jika ada field order
+      .lean()
+      .exec();
+
+    // 3. Return dengan struktur yang konsisten
+    return {
+      success: true,
+      message: `Berhasil memuat ${listCatalogs.length} katalog untuk kategori ${category.name}`,
+      data: listCatalogs
+    };
   }
 
   /**

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { fillAndStroke } from 'pdfkit';
 
 @Schema({ _id: false })
 class UserAnswer {
@@ -21,7 +22,7 @@ const UserAnswerSchema = SchemaFactory.createForClass(UserAnswer);
 
 @Schema({ timestamps: true })
 export class Attempt extends Document {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: fillAndStroke })
   user_key!: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Bab', required: true })

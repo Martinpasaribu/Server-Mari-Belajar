@@ -12,7 +12,7 @@ import { AccessGuard } from '../../common/guards/access.guard';
 
 @ApiTags('Attempts')
 @Controller('attempts')
-@UseGuards(AuthGuard('jwt')) // Guard 1: Cek Login
+// @UseGuards(AuthGuard('jwt')) // Guard 1: Cek Login
 export class AttemptsController {
   constructor(private readonly attemptsService: AttemptsService) {}
 
@@ -20,13 +20,14 @@ export class AttemptsController {
    * 1. Mulai Kuis (Create record 'in_progress')
    */
   @Post('start/:id')
-  @UseGuards(AccessGuard) // Guard 2: Cek apakah user sudah beli/enroll bab ini
+  // @UseGuards(AccessGuard) // Guard 2: Cek apakah user sudah beli/enroll bab ini
   async start(@Param('id') id: string, @Body() dto: StartAttemptDto, @Request() req: any) {
-    // Jika belum ada Auth Guard, ganti dengan ID dummy sementara
-    const userId = req.user.userId || req.user.id;
+
+    // Jika user login, ambil ID-nya. Jika tidak (guest), gunakan string 'GUEST'
+    const userId = req.user?.userId || req.user?.id || 'GUEST';
 
     const data = await this.attemptsService.startAttempt(userId, id);
-    
+
     return {
       success: true,
       message: 'Kuis dimulai, selamat mengerjakan!',
@@ -40,8 +41,11 @@ export class AttemptsController {
    */
   @Post(':id/submit')
   async submit(@Param('id') id: string, @Body() dto: SubmitAttemptDto, @Request() req: any) {
-    const data = await this.attemptsService.submitAttempt(id, req.user.userId, dto.answers);
     
+    const userId = req.user?.userId || req.user?.id || 'GUEST';
+
+    const data = await this.attemptsService.submitAttempt(id, userId, dto.answers);
+
     return {
       success: true,
       message: 'Jawaban berhasil dikirim dan dinilai.',

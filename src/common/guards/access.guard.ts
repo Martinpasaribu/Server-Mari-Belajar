@@ -19,45 +19,47 @@ export class AccessGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { user, params } = request;
     
-    // Pastikan babId diambil dari parameter yang benar (biasanya :id atau :babId)
     const babId = params.id;
-
     if (!babId) throw new BadRequestException('ID Bab diperlukan');
 
     const bab = await this.babModel.findById(babId).populate('sub_category_key').exec();
     
-    // SOLUSI ERROR: Cek apakah data Bab ditemukan
     if (!bab) {
       throw new NotFoundException('Materi (Bab) tidak ditemukan');
     }
 
-    // 1. Jika Bab-nya GRATIS, bolehkan lewat
+    // --- LOGIKA GRATIS (GUEST ALLOWED) ---
+
+    // 1. Cek jika Bab gratis
     if (bab.isFree) return true;
 
-    // Ambil data SubCategory dari populate
     const subCat = bab.sub_category_key as any;
-    
     if (!subCat) {
       throw new InternalServerErrorException('Data kategori modul tidak valid');
     }
 
-    // 2. Jika SubCategory-nya GRATIS, bolehkan lewat
+    // 2. Cek jika SubCategory (Modul) gratis
     if (subCat.isFree) return true;
 
-    // 3. Jika Berbayar, cek status user
-    const userData = await this.userModel.findById(user.userId).exec();
-    
-    if (!userData) {
-      throw new UnauthorizedException('User tidak valid');
+    // --- LOGIKA BERBAYAR (LOGIN REQUIRED) ---
+
+    // 3. Jika konten berbayar, user WAJIB login
+    if (!user || !user.userId) {
+      throw new UnauthorizedException('Materi ini berbayar. Silakan login terlebih dahulu.');
     }
 
-    // Cek apakah user memiliki akses ke modul ini
+    const userData = await this.userModel.findById(user.userId).exec();
+    if (!userData) {
+      throw new UnauthorizedException('Sesi user tidak valid');
+    }
+
+    // 4. Cek apakah user sudah membeli modul ini
     const isPurchased = userData.purchased_modules.some(id => 
       id.toString() === subCat._id.toString()
     );
 
     if (!isPurchased) {
-      throw new ForbiddenException('Materi ini berbayar. Silakan lakukan pembelian terlebih dahulu.');
+      throw new ForbiddenException('Silakan lakukan pembelian modul untuk mengakses materi ini.');
     }
 
     return true;

@@ -3,11 +3,13 @@ import { SubCategoriesModule } from '../sub-categories/sub-categories.module';
 import { CatalogController } from './catalogs.controller';
 import { CatalogService } from './catalogs.service';
 import { BabModule } from '../bab/bab.module';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
     imports: [
       SubCategoriesModule,
-      BabModule
+      BabModule,
+      CategoriesModule
     ],
   controllers: [CatalogController],
   providers: [CatalogService],

@@ -40,10 +40,24 @@ export class BabController {
   }
 
 
+  // Mengambil Pertanyaan kuis ( Sudah Login )
   @Get('questions/:id')
   @UseGuards(AuthGuard('jwt'), AccessGuard)
   async getBabQuestions(@Param('id') id: string) {
     const questions = await this.babService.findQuestionsByBab(id);
+    
+    return {
+      success: true,
+      message: 'Berhasil mengambil daftar soal',
+      data: questions, // <--- Ini yang dibaca oleh Frontend
+    };
+  }
+
+  // Mengambil Pertanyaan kuis ( Belum Login )
+  @Get('questions/guest/:id')
+  // @UseGuards(AuthGuard('jwt'), AccessGuard)
+  async getBabQuestionsGuest(@Param('id') id: string) {
+    const questions = await this.babService.findQuestionsByBabGuest(id);
     
     return {
       success: true,
