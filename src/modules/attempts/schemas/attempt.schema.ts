@@ -40,7 +40,7 @@ export class Attempt extends Document {
   @Prop({ default: 0 })
   wrong_count!: number;
 
-  @Prop({ enum: ['in_progress', 'submitted'], default: 'in_progress' })
+  @Prop({ enum: ['in_progress', 'submitted', 'finished'], default: 'in_progress' })
   status!: string;
 
   @Prop()

@@ -12,7 +12,7 @@ import { AccessGuard } from '../../common/guards/access.guard';
 
 @ApiTags('Attempts')
 @Controller('attempts')
-// @UseGuards(AuthGuard('jwt')) // Guard 1: Cek Login
+@UseGuards(AuthGuard('jwt')) // Guard 1: Cek Login
 export class AttemptsController {
   constructor(private readonly attemptsService: AttemptsService) {}
 
@@ -20,7 +20,7 @@ export class AttemptsController {
    * 1. Mulai Kuis (Create record 'in_progress')
    */
   @Post('start/:id')
-  // @UseGuards(AccessGuard) // Guard 2: Cek apakah user sudah beli/enroll bab ini
+  @UseGuards(AccessGuard) // Guard 2: Cek apakah user sudah beli/enroll bab ini
   async start(@Param('id') id: string, @Body() dto: StartAttemptDto, @Request() req: any) {
 
     // Jika user login, ambil ID-nya. Jika tidak (guest), gunakan string 'GUEST'
