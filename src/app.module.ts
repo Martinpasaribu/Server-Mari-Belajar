@@ -24,6 +24,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { mailerConfig } from './config/email_sender/mailer.config';
 import { DeliveryModule } from './modules/delivery/delivery.module';
 import { StatusModule } from './modules/status/status.module';
+import { GuestModule } from './modules/guest/guest.module';
 
 
 @Module({
@@ -65,6 +66,7 @@ import { StatusModule } from './modules/status/status.module';
     MidtransModule,
     DeliveryModule,
     StatusModule,
+    GuestModule,
 
     // RedisModule.forRootAsync({
     //   imports: [ConfigModule],
