@@ -26,8 +26,18 @@ export class GuestService {
 
 
   async startAttempt(userId: string, babId: string) {
+
     const bab = await this.babModel.findById(babId).lean();
+
     if (!bab) throw new NotFoundException('Bab tidak ditemukan');
+
+    if (bab.question_keys.length <= 0) throw new NotFoundException(
+      {
+        message: 'Belum Ada Soal Tersedai saat ini',
+        status: false,
+        data: []
+      }
+    );
     
     const isGuest = userId === 'GUEST';
     const userKey = isGuest ? null : new Types.ObjectId(userId);
