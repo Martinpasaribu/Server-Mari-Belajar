@@ -123,7 +123,8 @@ export class AttemptsService {
 
     // 2. Ambil SEMUA soal (Gunakan .lean() agar lebih cepat)
     const allQuestions = await this.questionModel.find({ 
-      bab_key: attempt.bab_key 
+      bab_key: attempt.bab_key,
+      isDeleted: false
     }).lean();
 
     if (!allQuestions.length) {
@@ -183,12 +184,22 @@ export class AttemptsService {
       .populate('bab_key', 'name description duration')
       .populate({
         path: 'answers.question_key',
-        select: 'question_text options correct_answer discussion_text'
+        match: { isDeleted: false }, // Filter di level populasi
+        select: 'question_text options correct_answer discussion_text question_audio question_images'
       })
       .exec();
 
     if (!result) throw new NotFoundException('Hasil tidak ditemukan');
-    return result;
+
+    // Konversi ke object biasa
+    const resultObj = result.toObject();
+
+    // FILTER: Hapus answer yang question_key-nya null (karena isDeleted: true)
+    resultObj.answers = resultObj.answers.filter(
+      (ans) => ans.question_key !== null
+    );
+
+    return resultObj;
   }
 
   //  ✅ Ambil Semua Hasil Ujian 
@@ -229,6 +240,7 @@ export class AttemptsService {
         .populate('bab_key', 'name description duration')
         .populate({ 
           path: 'answers.question_key',
+          match: { isDeleted: false },
           select: 'question_text options correct_answer discussion_text'
         })
         .sort({ createdAt: -1 }) // Terbaru di atas
