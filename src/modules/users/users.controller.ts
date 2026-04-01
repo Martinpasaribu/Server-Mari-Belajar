@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { 
   Controller, 
   Get, 
@@ -6,16 +10,24 @@ import {
   Patch, 
   Param, 
   Delete, 
-  UseGuards 
+  UseGuards, 
+  Req,
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { MediaService } from '../media/media.service';
+import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly mediaService: MediaService,
+  ) {}
 
   // Pendaftaran User Baru (Public)
   @Post('register')
@@ -44,12 +56,6 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  // Update profil user
-  @UseGuards(AuthGuard('jwt'))
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
-  }
 
   // Soft delete user
   @UseGuards(AuthGuard('jwt'))
@@ -57,4 +63,41 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  /**
+   * Menangani Update Nama, Telepon, Lokasi, dll.
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('profile')
+  async updateInfo(@Req() req, @Body() body: any) {
+
+    const userId = req.user?.userId || req.user?.id || 'GUEST';
+    const result = await this.usersService.updateProfileData(userId, body);
+    
+    return {
+      success: true,
+      message: 'Profil diperbarui',
+      data: result,
+    };
+  }
+
+  /**
+   * Menangani Upload Foto Profil
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Post('profile/avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadAvatar(@Req() req, @UploadedFile() file: Express.Multer.File) {
+    // Cukup panggil service, biarkan service yang bekerja keras
+    const userId = req.user?.userId || req.user?.id || 'GUEST';
+
+    const result = await this.usersService.updateAvatar(userId, file);
+    
+    return {
+      success: true,
+      message: 'Foto profil diperbarui',
+      data: result,
+    };
+  }
+
 }

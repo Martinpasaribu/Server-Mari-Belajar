@@ -16,9 +16,10 @@ import { SubCategory } from '../sub-categories/schemas/sub-category.schema';
 import { User } from '../users/schemas/user.schema';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Transaction } from '../payments/schemas/transaction.schema';
-import { MailerService } from '@nestjs-modules/mailer';
-import { DeliveryService } from '../delivery/delivery.service';
+// import { MailerService } from '@nestjs-modules/mailer';
+// import { DeliveryService } from '../delivery/delivery.service';
 import * as PDFDocument from 'pdfkit';
+import { MailerService } from '../mailer/mailer.service';
 
 @Injectable()
 export class EnrollmentService {
@@ -29,7 +30,7 @@ export class EnrollmentService {
     @InjectModel(SubCategory.name) private subCategoryModel: Model<SubCategory>,
     @InjectModel(Transaction.name) private transactionModel: Model<Transaction>,
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly deliveryService: DeliveryService,
+    private readonly deliveryService: MailerService,
   ) {}
 
   /**

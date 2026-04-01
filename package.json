@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs-modules/mailer": "^2.3.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -32,11 +32,13 @@
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/swagger": "^11.2.0",
     "@vercel/node": "^5.3.6",
+    "axios": "^1.14.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "dotenv": "^17.2.0",
     "ejs": "^4.0.1",
+    "email-validator": "^2.0.4",
     "env": "^0.0.2",
     "imagekit": "^6.0.0",
     "ioredis": "^5.6.1",
@@ -44,7 +46,7 @@
     "module-alias": "^2.3.4",
     "mongoose": "^8.16.4",
     "multer": "^2.0.2",
-    "nodemailer": "^8.0.1",
+    "nodemailer": "^8.0.4",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-google-token": "^0.1.2",
@@ -64,10 +66,12 @@
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.10.7",
     "@types/bcrypt": "^6.0.0",
+    "@types/email-validator": "^1.0.30",
     "@types/express": "^5.0.6",
     "@types/jest": "^29.5.14",
     "@types/multer": "^2.0.0",
     "@types/node": "^22.10.7",
+    "@types/nodemailer": "^7.0.11",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/pdfkit": "^0.17.5",
@@ -104,6 +108,4 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
-  
 }
-

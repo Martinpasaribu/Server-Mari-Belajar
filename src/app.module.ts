@@ -20,11 +20,12 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogsModule } from './modules/catalogs/catalogs.module';
 import { MidtransModule } from './modules/midtrans/midtrans.module';
-import { MailerModule } from '@nestjs-modules/mailer';
+// import { MailerModule } from '@nestjs-modules/mailer';
 import { mailerConfig } from './config/email_sender/mailer.config';
 import { DeliveryModule } from './modules/delivery/delivery.module';
 import { StatusModule } from './modules/status/status.module';
 import { GuestModule } from './modules/guest/guest.module';
+import { MailerModule } from './modules/mailer/mailer.module';
 
 
 @Module({
@@ -48,9 +49,10 @@ import { GuestModule } from './modules/guest/guest.module';
       connectionName: 'usersConnection', // 👈 penting!
     }),
 
-    MailerModule.forRootAsync({
-      useFactory: () => mailerConfig(),
-    }),
+    // MailerModule.forRootAsync({
+    //   useFactory: () => mailerConfig(),
+    // }),
+    MailerModule,
     
     VisitorModule,
     CategoriesModule,

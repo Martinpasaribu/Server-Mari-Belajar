@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable max-len */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { MediaObject, MediaObjectSchema } from 'src/modules/media/schema/media.schema';
 
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -13,18 +15,33 @@ export class User extends Document {
   @Prop({ required: true })
   firstname!: string;
   
-  @Prop({ required: true })
+  @Prop({ required: false })
   lastname!: string;
+
+  @Prop({ type: String, enum: ['F', 'M', 'O'], default: 'O' })
+  @Prop({ required: true })
+  gender?: string;
 
   @Prop({ default: 0 })
   age!: number; 
 
+  @Prop()
+  title?: string; // Student, Designer, job seekers, etc
+
+  @Prop({ type: [String] })
+  goals!: string[];
+
+  @Prop({ type: [String] })
+  interested!: string[];
+
+  @Prop({ type: MediaObjectSchema })
+  avatar!: MediaObject;
+  
+  @Prop()
+  location?: string;
 
   @Prop()
-  title?: string; // pekerjaan atau title
-
-  @Prop()
-  avatar?: string;
+  phone?: string; // Seringkali dibutuhkan untuk integrasi payment gateway (seperti Midtrans/Xendit)
 
   // IDENTITAS PROVIDER
   @Prop({ enum: ['local', 'google'], default: 'local' })
@@ -32,6 +49,7 @@ export class User extends Document {
 
   @Prop()
   googleId?: string;
+
 
   // SISTEM PEMBAYARAN & AKSES
   @Prop({ enum: ['free', 'premium', 'pro'], default: 'free' })
@@ -69,12 +87,6 @@ export class User extends Document {
   // --- ANALITIK & USER EXPERIENCE ---
   @Prop()
   lastLogin?: Date; // Untuk memantau keaktifan user
-
-  @Prop({ type: String, enum: ['L', 'P', 'Other'], default: 'Other' })
-  gender?: string;
-
-  @Prop()
-  phoneNumber?: string; // Seringkali dibutuhkan untuk integrasi payment gateway (seperti Midtrans/Xendit)
 
   // --- PROGRESS BELAJAR ---
   @Prop({ type: [{ bab_key: { type: Types.ObjectId, ref: 'Bab' }, last_accessed: Date }] })

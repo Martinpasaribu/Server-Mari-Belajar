@@ -9,6 +9,7 @@ import { AttemptsModule } from '../attempts/attempts.module';
 import { MidtransModule } from '../midtrans/midtrans.module';
 import { Transaction, TransactionSchema } from '../payments/schemas/transaction.schema';
 import { DeliveryModule } from '../delivery/delivery.module';
+import { MailerModule } from '../mailer/mailer.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { DeliveryModule } from '../delivery/delivery.module';
     ]),
     AttemptsModule,
     MidtransModule,
-    DeliveryModule
+    DeliveryModule,
+    MailerModule
   ],
   controllers: [EnrollmentController],
   providers: [EnrollmentService],

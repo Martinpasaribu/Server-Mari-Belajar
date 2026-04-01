@@ -8,13 +8,16 @@ import {
   Get, 
   UseGuards, 
   Req, 
-  Res 
+  Res, 
+  HttpCode,
+  HttpStatus
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/create-auth.dto'; // Pastikan nama file sesuai
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -75,6 +78,30 @@ export class AuthController {
     // Pastikan payload di JwtStrategy kamu menyimpan property 'userId' atau 'sub'
     // Jika di strategy kamu pakai 'sub', maka gunakan req.user.sub
     return this.authService.getProfile(req.user.userId || req.user.sub);
+  }
+
+
+/**
+   * Endpoint untuk meminta reset password
+   * POST /auth/forgot-password
+   */
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK) // Mengembalikan status 200 alih-alih 201 (Created)
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  /**
+   * Endpoint untuk eksekusi ganti password baru
+   * POST /auth/reset-password
+   */
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(
+    @Body('token') token: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.authService.resetPassword(token, newPassword);
   }
 
 }

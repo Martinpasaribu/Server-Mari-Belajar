@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { 
   IsEmail, 
   IsNotEmpty, 
@@ -5,8 +7,11 @@ import {
   MinLength, 
   IsOptional, 
   IsNumber, 
-  Min 
+  Min, 
+  ValidateNested,
+  IsArray
 } from 'class-validator';
+import { MediaObjectDto } from 'src/modules/media/dto/create-media.dto';
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Format email tidak valid' })
@@ -20,11 +25,12 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Nama Depan wajib diisi' })
-  firstName!: string;
+  firstname!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Nama Belakang wajib diisi' })
-  lastName!: string;
+  @IsOptional()
+  // @IsNotEmpty({ message: 'Nama Belakang wajib diisi' })
+  lastname!: string;
 
   @IsOptional()
   @IsNumber()
@@ -33,14 +39,33 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  title?: string;
+  title?: string; // Student, Designer, job seekers, etcg
 
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  goals?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  interested?: string[];
+  
   @IsOptional()
   @IsString()
   gender?: string;
 
   @IsOptional()
   @IsString()
-  phoneNumber?: string;
+  phone?: string;
+
+  @ApiProperty({ type: MediaObjectDto, required: false })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => MediaObjectDto)
+  avatar?: MediaObjectDto;
+
+  @IsOptional()
+  location?: string;
 }
 
