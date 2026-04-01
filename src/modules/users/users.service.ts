@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { MediaService } from '../media/media.service';
-import { EmailHelper } from 'src/shared/utils/email-checker.util';
+import { EmailHelper } from '../../shared/utils/email-checker.util';
 
 @Injectable()
 export class UsersService {
