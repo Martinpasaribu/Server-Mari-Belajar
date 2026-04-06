@@ -77,7 +77,7 @@ export class AuthService {
           email: googleUser.email,
           firstname: googleUser.firstName, // Ambil firstName saja dari Google
           lastname: googleUser.lastName,   // Ambil lastName saja dari Google
-          avatar: googleUser.picture,
+          avatar_google: googleUser.picture,
           provider: 'google',
           password: Math.random().toString(36).slice(-16),
           isActive: true,
@@ -107,7 +107,7 @@ export class AuthService {
         lastname: user.lastname || user.lastName,
         account_type: user.account_type,
         role: user.role,
-        avatar: user.avatar
+        avatar_google: user.avatar
       }
     };
   }

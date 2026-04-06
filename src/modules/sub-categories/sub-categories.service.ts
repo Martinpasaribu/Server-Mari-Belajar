@@ -37,7 +37,7 @@ export class SubCategoriesService {
     // Hanya ambil yang belum dihapus (Soft Delete)
     return await this.subCategoryModel
       .find({ isDeleted: false, ...query })
-      .populate('category_key', 'name') // Ambil nama kategori induknya saja
+      .populate('category_key', 'name','enrolled_users') // Ambil nama kategori induknya saja
       .sort({ order: 1 }) // Urutkan berdasarkan field 'order'
       .exec();
   }
@@ -60,7 +60,7 @@ async findByCategory(categoryId: string): Promise<any> {
       category_key: new Types.ObjectId(categoryId), 
       isDeleted: false 
     })
-    .populate('category_key') // Ambil data lengkap kategori
+    .populate('category_key','enrolled_users') // Ambil data lengkap kategori
     .sort({ order: 1 })
     .exec();
 

@@ -9,9 +9,13 @@ import { MediaObject, MediaObjectSchema } from '../../media/schema/media.schema'
   toJSON: { virtuals: true }, 
   toObject: { virtuals: true } 
 })
+
 export class SubCategory extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
   category_key!: Types.ObjectId;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], default: [] })
+  enrolled_users!: Types.ObjectId[];
 
   @Prop({ required: true, trim: true })
   name!: string;
@@ -68,6 +72,8 @@ export class SubCategory extends Document {
 
   @Prop({ default: 0 })
   order!: number;
+
+
 }
 
 export const SubCategorySchema = SchemaFactory.createForClass(SubCategory);

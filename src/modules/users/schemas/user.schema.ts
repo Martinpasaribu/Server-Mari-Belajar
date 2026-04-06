@@ -36,6 +36,9 @@ export class User extends Document {
 
   @Prop({ type: MediaObjectSchema })
   avatar!: MediaObject;
+
+  @Prop()
+  avatar_google?: string;
   
   @Prop()
   location?: string;

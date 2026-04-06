@@ -66,6 +66,19 @@ export class EnrollmentService {
       
       const savedEnrollment = await newEnrollment.save();
 
+      await this.subCategoryModel.findOneAndUpdate(
+        { 
+          _id: new Types.ObjectId(dto.sub_category_key) 
+        }, 
+        { 
+          // $addToSet menambah ID ke array jika belum ada
+          $addToSet: { enrolled_users: new Types.ObjectId(dto.user_key) },
+          // Jika Anda tetap ingin menghitung jumlah totalnya secara otomatis:
+          $inc: { studentCount: 1 } 
+        }, 
+        { new: true }
+      );
+
       // SYNC: Jika status success (baik karena gratis atau input manual admin)
       if (savedEnrollment.status === 'success') {
         await this.syncUserAccess(

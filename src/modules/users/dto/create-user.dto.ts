@@ -67,5 +67,8 @@ export class CreateUserDto {
 
   @IsOptional()
   location?: string;
+  
+  @IsOptional()
+  avatar_google?: string;
 }
 
