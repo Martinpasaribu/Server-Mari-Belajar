@@ -148,12 +148,13 @@ export class EnrollmentController {
   @UseGuards(AuthGuard('jwt'))
   // Gunakan alias @Req() tersebut di sini
   async getUserHistoryBab(@Param('id') id: string, @Req() req: any) {
-    // const userId = req.user.userId || req.user.id;
+    
+    const userId = req.user.userId || req.user.id;
     
     // Catatan: Pastikan di service ada method getUserHistory. 
     // Jika kamu pakai getResult(userId), pastikan service tersebut mencari 
     // berdasarkan User ID, bukan Attempt ID.
-    const history=  await this.attemptsService.getResultByBab(id);
+    const history=  await this.attemptsService.getResultByBab(id, userId);
     return {
       success: true,
       message: 'Berhasil mengambil riwayat kuis by bab',

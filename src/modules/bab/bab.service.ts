@@ -43,15 +43,24 @@ export class BabService {
       .populate({
         path: 'question_keys',
         match: { isDeleted: false },
-        options: { sort: { order: 1 } }
+        // Hapus sort order agar tidak berat di query
       })
       .exec();
 
     if (!bab) throw new NotFoundException('Bab tidak ditemukan');
 
+    // Ambil array soal
+    const questions = bab.question_keys as any[];
+
+    // Algoritma Fisher-Yates untuk mengacak array secara merata
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+
     return {
-      questions: bab.question_keys,
-      duration: bab.duration || 30 // Mengambil durasi dari DB jika ada
+      questions: questions,
+      duration: bab.duration || 30
     };
   }
 
@@ -79,9 +88,19 @@ export class BabService {
       );
     }
 
+        // Ambil array soal
+    const questions = bab.question_keys as any[];
+
+    // Algoritma Fisher-Yates untuk mengacak array secara merata
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+
+
     // 4. Jika lolos semua pengecekan, kembalikan data
     return {
-      questions: bab.question_keys,
+      questions: questions,
       duration: bab.duration || 30,
       babName: bab.name // Tambahan informasi untuk UI
     };

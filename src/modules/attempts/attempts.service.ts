@@ -226,17 +226,18 @@ export class AttemptsService {
   /**
    * ✅ Ambil Hasil Ujian Dari Tiap Bab 
    */
-  async getResultByBab(babId: string) {
+  async getResultByBab(babId: string, userId: string) {
     // 1. Validasi format ID untuk mencegah error internal server
     if (!Types.ObjectId.isValid(babId)) {
       throw new BadRequestException('Format ID Bab tidak valid');
     }
 
     const babObjectId = new Types.ObjectId(babId);
+    const userObjectId = new Types.ObjectId(userId);
 
     // 2. Jalankan query secara paralel untuk performa lebih cepat
     const [results, bab] = await Promise.all([
-      this.attemptModel.find({ bab_key: babObjectId })
+      this.attemptModel.find({ bab_key: babObjectId, user_key: userObjectId })
         .populate('bab_key', 'name description duration')
         .populate({ 
           path: 'answers.question_key',
