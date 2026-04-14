@@ -50,6 +50,7 @@ export class SubCategoriesController {
   findOne(@Param('id') id: string) {
     return this.subCategoriesService.findOne(id);
   }
+  
   @Patch(':id')
   @ApiOperation({ summary: 'Mengupdate data sub-kategori' })
   update(@Param('id') id: string, @Body() updateDto: UpdateSubCategoryDto) {

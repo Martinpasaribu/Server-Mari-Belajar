@@ -4,15 +4,28 @@ import { MediaObject, MediaObjectSchema } from '../../media/schema/media.schema'
 
 @Schema({ _id: false })
 class Option {
-  @Prop({ required: true })
+  @Prop({ required: false })
   label!: string; // A, B, C, D, atau E
 
-  @Prop()
+  @Prop({ required: false })
   text!: string; // Isi teks jawaban (opsional jika jawaban berupa gambar)
 
   @Prop({ type: MediaObjectSchema })
   image!: MediaObject; // Digunakan jika tipe soal adalah 'image_options'
 }
+
+class Source {
+  @Prop({ required: false })
+  name!: string; 
+
+  @Prop({ required: false })
+  link!: string; // Isi teks jawaban (opsional jika jawaban berupa gambar)
+
+  @Prop({ type: MediaObjectSchema })
+  image!: MediaObject; // Digunakan jika tipe soal adalah 'image_options'
+}
+
+const SourceSchema = SchemaFactory.createForClass(Source);
 
 const OptionSchema = SchemaFactory.createForClass(Option);
 
@@ -46,6 +59,9 @@ export class Question extends Document {
   @Prop({ required: true, trim: true })
   question_text!: string;
 
+  @Prop({ required: false, trim: true, unique: true })
+  code!: string;
+
   // --- MULTIMEDIA SOAL ---
   @Prop({ type: MediaObjectSchema })
   question_audio!: MediaObject; // Untuk soal Listening/Suara
@@ -56,6 +72,10 @@ export class Question extends Document {
   // --- PILIHAN JAWABAN ---
   @Prop({ type: [OptionSchema], default: [] })
   options!: Option[]; // Kosong jika tipe 'essay'
+
+    // --- PILIHAN source ---
+  @Prop({ type: [SourceSchema], default: {} })
+  source!: Source[]; // Kosong jika tipe 'essay'
 
   @Prop({ required: true })
   correct_answer!: string; // Label (A/B/C) atau Kunci Jawaban (untuk Essay)

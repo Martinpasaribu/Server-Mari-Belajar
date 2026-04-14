@@ -45,7 +45,7 @@ export class CreateBabDto {
 
   @IsArray()
   @IsOptional()
-  @IsMongoId({ each: true }) // Memvalidasi setiap isi array adalah format MongoID
+  // @IsMongoId({ each: true }) // Memvalidasi setiap isi array adalah format MongoID
   @Transform(({ value }) => {
     if (!Array.isArray(value)) return value;
     return value.map((id: string) => {

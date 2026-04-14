@@ -26,7 +26,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
-    forbidNonWhitelisted: true,
+    forbidNonWhitelisted: false, // JANGAN lempar error jika ada data asing
     transform: true, // INI KUNCINYA
       transformOptions: {
         enableImplicitConversion: true, // Tambahkan ini juga

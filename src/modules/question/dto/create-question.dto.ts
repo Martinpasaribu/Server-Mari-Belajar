@@ -52,6 +52,10 @@ export class CreateQuestionDto {
   type!: string;
 
   @IsString()
+  @IsOptional() // Optional karena di-generate oleh sistem
+  code?: string;
+
+  @IsString()
   @IsNotEmpty()
   question_text!: string;
 
