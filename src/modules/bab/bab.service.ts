@@ -11,7 +11,7 @@ import { CreateBabDto } from './dto/create-bab.dto';
 import { UpdateBabDto } from './dto/update-bab.dto';
 import slugify from 'slugify';
 import { MediaService } from '../media/media.service';
-import { CodeSectionGenerator } from 'src/common/utils/generator';
+import { CodeSectionGenerator } from '../../common/utils/generator';
 
 @Injectable()
 export class BabService {
