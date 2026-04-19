@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { MediaObject, MediaObjectSchema } from '../../media/schema/media.schema';
@@ -12,6 +13,15 @@ class Option {
 
   @Prop({ type: MediaObjectSchema })
   image!: MediaObject; // Digunakan jika tipe soal adalah 'image_options'
+}
+
+class section {
+  @Prop({ required: false })
+  label!: string; 
+
+  @Prop({ required: false })
+  name!: string; // Isi teks jawaban (opsional jika jawaban berupa gambar)
+
 }
 
 class Source {
@@ -36,7 +46,7 @@ const OptionSchema = SchemaFactory.createForClass(Option);
 })
 
 export class Question extends Document {
-  @Prop({ type: Types.ObjectId, ref: 'babs', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Bab', required: true })
   bab_key!: Types.ObjectId;
 
   // cara 2: langsung simpan ObjectId, tapi pastikan di DTO sudah benar-benar ObjectId
@@ -58,6 +68,16 @@ export class Question extends Document {
 
   @Prop({ required: true, trim: true })
   question_text!: string;
+
+  @Prop({ 
+    type: Object, // Atau gunakan Schema jika 'section' adalah sub-schema
+    required: false, 
+    default: null 
+  })
+  section?: section | null;
+
+  @Prop({ required: true, trim: true })
+  question_text_base!: string;
 
   @Prop({ required: false, trim: true, unique: true })
   code!: string;
@@ -83,6 +103,9 @@ export class Question extends Document {
   // --- PEMBAHASAN (WAJIB) ---
   @Prop({ required: true })
   discussion_text!: string;
+
+  @Prop({ required: true })
+  discussion_text_base!: string;
 
   @Prop({ type: MediaObjectSchema })
   discussion_video!: MediaObject; // Pembahasan versi video (opsional)

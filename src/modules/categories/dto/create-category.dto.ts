@@ -19,6 +19,16 @@ export class CreateCategoryDto {
   @IsOptional()
   sub_description?: string;
 
+  @ApiProperty({ example: 'Kategori untuk tes CPNS' })
+  @IsString()
+  @IsOptional()
+  description_base?: string;
+
+  @ApiProperty({ example: 'Terdiri dari TIU, TWK, TKP' })
+  @IsString()
+  @IsOptional()
+  sub_description_base?: string;
+
   @ApiProperty({ type: MediaObjectDto, required: false })
   @IsOptional()
   @Type(() => MediaObjectDto)

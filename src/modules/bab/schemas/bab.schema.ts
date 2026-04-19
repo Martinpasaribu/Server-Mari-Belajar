@@ -7,10 +7,24 @@ import { Document, Types } from 'mongoose';
 import { MediaObject, MediaObjectSchema } from '../../media/schema/media.schema';
 // import { Question } from 'src/modules/question/schemas/question.schema';
 
+
+@Schema({ _id: false })
+class section {
+  @Prop({ required: false })
+  label!: string; //  reading_comprehension
+
+  @Prop({ required: false })
+  name!: string; // nama kata kunci : READING COMPREHENSION 
+}
+
+
+const SectionSchema = SchemaFactory.createForClass(section);
+
 @Schema({ 
   timestamps: true, 
   toJSON: { virtuals: true }, 
-  toObject: { virtuals: true } 
+  toObject: { virtuals: true } ,
+  collection: 'babs',
 })
 
 export class Bab extends Document {
@@ -38,6 +52,21 @@ export class Bab extends Document {
 
   @Prop({ default: '' })
   content!: string; // Untuk teks materi/markdown
+
+  @Prop({ default: '' })
+  description_base!: string;
+
+  @Prop({ default: '' })
+  sub_description_base!: string;
+
+  @Prop({ default: '' })
+  content_base!: string; // Untuk teks materi/markdown
+
+
+  // --- PILIHAN JAWABAN ---
+  @Prop({ type: [SectionSchema], default: [] })
+  section!: section[]; // Kosong jika tipe 'essay'
+  
 
   // --- LOGIKA AKSES ---
   @Prop({ default: false })

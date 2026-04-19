@@ -79,6 +79,18 @@ export class QuestionsController {
     return this.questionsService.findOne(id);
   }
 
+
+  @Get('single/:id')
+  // @Public() // Gunakan decorator Public jika kamu punya AuthGuard global
+  async getSingleQuestion(@Param('id') id: string) {
+    const data = await this.questionsService.findOnePublic(id);
+    return {
+      success: true,
+      message: 'Berhasil mengambil data soal',
+      data,
+    };
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Admin: Update data soal' })
   update(@Param('id') id: string, @Body() updateDto: UpdateQuestionDto) {

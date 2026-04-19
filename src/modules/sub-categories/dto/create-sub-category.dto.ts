@@ -44,6 +44,16 @@ export class CreateSubCategoryDto {
   @IsOptional()
   sub_description?: string;
 
+  @ApiProperty({ example: 'sub Kategori untuk tes CPNS' })
+  @IsString()
+  @IsOptional()
+  description_base?: string;
+
+  @ApiProperty({ example: 'Terdiri dari TIU, TWK, TKP' })
+  @IsString()
+  @IsOptional()
+  sub_description_base?: string;
+
   @ApiProperty({ example: 150000 })
   @IsNumber()
   @IsNotEmpty()

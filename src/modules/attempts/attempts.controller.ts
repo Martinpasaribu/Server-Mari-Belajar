@@ -48,7 +48,7 @@ export class AttemptsController {
 
     return {
       success: true,
-      message: 'Jawaban berhasil dikirim dan dinilai.',
+      message: 'Jawaban berhasil dikirim dan dinilai cekk',
       uuid_req: randomUUID(),
       data,
     };

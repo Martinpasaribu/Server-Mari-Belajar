@@ -22,6 +22,12 @@ export class Category extends Document {
   @Prop()
   sub_description!: string;
 
+  @Prop()
+  description_base!: string;
+
+  @Prop()
+  sub_description_base!: string;
+
 // Gunakan MediaObjectSchema agar validasi internal Mongoose jalan
   @Prop({ type: MediaObjectSchema })
   icon!: MediaObject;

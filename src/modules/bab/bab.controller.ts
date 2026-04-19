@@ -68,7 +68,7 @@ export class BabController {
 
   @Get('questions/admin/:id')
   async getBabQuestionsAtAdmin(@Param('id') id: string) {
-    const questions = await this.babService.findQuestionsByBab(id);
+    const questions = await this.babService.findQuestionsByBabAdmin(id);
     
     return {
       success: true,

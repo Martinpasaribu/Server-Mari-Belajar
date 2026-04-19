@@ -132,27 +132,61 @@ export class AttemptsService {
     }
 
     let correctCount = 0;
+
+    // --- LOGIKA BARU: SECTION PERFORMANCE ---
+    // Kita gunakan Map atau Object untuk menyimpan stats per section
+    const sectionStats: Record<string, { 
+      section_name: string, 
+      correct: number, 
+      total: number, 
+      score: number 
+    }> = {};
     
     // 3. Kalkulasi Jawaban
     const processedAnswers = allQuestions.map(originalQuestion => {
+      // Ambil nama section dari soal (default ke 'General' jika tidak ada)
+      const sectionName = originalQuestion.section?.name || 'General';
+      
+      // Inisialisasi statistik section jika belum ada
+      if (!sectionStats[sectionName]) {
+        sectionStats[sectionName] = { 
+          section_name: sectionName, 
+          correct: 0, 
+          total: 0, 
+          score: 0 
+        };
+      }
+      sectionStats[sectionName].total++;
+
       const userAns = userAnswersDto.find(
         a => a.question_key.toString() === originalQuestion._id.toString()
       );
 
       const answerGiven = userAns ? userAns.answer_given : ""; 
-      
       const isCorrect = answerGiven 
         ? String(originalQuestion.correct_answer).trim().toLowerCase() === String(answerGiven).trim().toLowerCase()
         : false;
 
-      if (isCorrect) correctCount++;
+      if (isCorrect) {
+        correctCount++;
+        sectionStats[sectionName].correct++; // Tambah skor per section
+      }
 
       return {
         question_key: originalQuestion._id,
         answer_given: answerGiven,
-        is_correct: isCorrect
+        is_correct: isCorrect,
+        section_name: sectionName // Opsional: simpan info section di tiap jawaban
       };
     });
+
+    // 4. Hitung Final Score per Section
+    const section_performance = Object.values(sectionStats).map(stat => ({
+      ...stat,
+      score: Math.round((stat.correct / stat.total) * 100)
+    }));
+
+
 
     // 4. Hitung Skor & Waktu
     const totalQuestions = allQuestions.length;
@@ -169,13 +203,17 @@ export class AttemptsService {
     attempt.total_score = Math.round(score);
     attempt.status = 'submitted';
     attempt.submitted_at = now;
+
     (attempt as any).duration_seconds = timeTakenSeconds; 
-    
+    // Simpan hasil section ke metadata atau field baru jika ada di Schema
+    (attempt as any).section_performance = section_performance;
+
     const savedResult = await attempt.save();
     
     return {
       ...savedResult.toObject(),
-      time_taken_seconds: timeTakenSeconds
+      time_taken_seconds: timeTakenSeconds,
+      section_performance,
     };
   }
 
@@ -185,7 +223,7 @@ export class AttemptsService {
       .populate({
         path: 'answers.question_key',
         match: { isDeleted: false }, // Filter di level populasi
-        select: 'question_text options correct_answer discussion_text question_audio question_images'
+        select: 'question_text options correct_answer discussion_text question_audio question_images section'
       })
       .exec();
 
@@ -208,7 +246,7 @@ export class AttemptsService {
     // 1. Cast string userId ke ObjectId untuk keamanan pencarian
 
     const result = await this.attemptModel.find({ user_key: new Types.ObjectId(userId) })
-        .populate('bab_key', 'name description duration') // Pastikan field 'name' ada di schema Bab, bukan 'title'
+        .populate('bab_key', 'name description duration section') // Pastikan field 'name' ada di schema Bab, bukan 'title'
         // .populate({
         //   path: 'answers.question_key',
         //   select: 'question_text options correct_answer discussion_text'
@@ -242,7 +280,7 @@ export class AttemptsService {
         .populate({ 
           path: 'answers.question_key',
           match: { isDeleted: false },
-          select: 'question_text options correct_answer discussion_text'
+          select: 'question_text options correct_answer discussion_text section'
         })
         .sort({ createdAt: -1 }) // Terbaru di atas
         .lean() // Gunakan lean agar lebih ringan (Plain JS Object)

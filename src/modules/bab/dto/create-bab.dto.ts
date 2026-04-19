@@ -19,6 +19,17 @@ import { MediaObjectDto } from '../../media/dto/create-media.dto';
 import { Transform, Type } from 'class-transformer';
 import { Types } from 'mongoose';
 
+class SectionDto {
+  @IsString()
+  @IsNotEmpty()
+  label!: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+}
+
 
 export class CreateBabDto {
   @ApiProperty({ example: '658a99988877766655544433', description: 'ID dari Sub-Category' })
@@ -55,6 +66,13 @@ export class CreateBabDto {
   })
   question_keys: Types.ObjectId[] = []; 
 
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SectionDto)
+  section?: SectionDto[];
+  
+
   @ApiProperty({ example: 'Pendahuluan mengenai variabel x dan y', required: false })
   @IsString()
   @IsOptional()
@@ -65,10 +83,25 @@ export class CreateBabDto {
   @IsOptional()
   sub_description?: string;
 
+  @ApiProperty({ example: 'Kategori untuk tes CPNS' })
+  @IsString()
+  @IsOptional()
+  description_base?: string;
+
+  @ApiProperty({ example: 'Terdiri dari TIU, TWK, TKP' })
+  @IsString()
+  @IsOptional()
+  sub_description_base?: string;
+
   @ApiProperty({ example: '## Judul Materi \n Ini adalah isi materi dalam markdown...', required: false })
   @IsString()
   @IsOptional()
   content?: string;
+
+  @ApiProperty({ example: '## Judul Materi \n Ini adalah isi materi dalam markdown...', required: false })
+  @IsString()
+  @IsOptional()
+  content_base?: string;
 
   @ApiProperty({ example: false, description: 'Apakah bab ini bisa dibuka gratis sebagai trial?' })
   @IsBoolean()

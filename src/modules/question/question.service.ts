@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -51,7 +52,7 @@ export class QuestionsService {
     const sequence = (totalQuestions + 1).toString().padStart(3, '0');
 
     // 4. Gabungkan jadi format: Q-XX-000
-    const generatedCode = `Q-${prefix}-${sequence}`;
+    const generatedCode = `Q${prefix}-${sequence}`;
 
     // 5. Masukkan ke dalam payload
     const payload = {
@@ -115,10 +116,40 @@ export class QuestionsService {
   }
 
   async findOne(id: string): Promise<Question> {
-    const question = await this.questionModel.findById(id);
+    const question = await this.questionModel.findById(id)
+      .populate({
+          path: 'bab_key', // Sesuaikan dengan nama field di Question schema kamu
+          model: 'Bab',    // Opsional: sebutkan modelnya jika relasinya cross-collection
+          select: 'name title section' // Opsional: pilih field tertentu saja agar tidak berat
+      })
+      .sort({ createdAt: -1 })
+      .exec();;
+      
     if (!question) throw new NotFoundException('Soal tidak ditemukan');
     return question;
   }
+
+  /**
+   * Mengambil satu soal secara publik (Ask for Help mode)
+   * Membuang field sensitif agar tidak bisa di-intip di network tab
+   */
+  async findOnePublic(id: string): Promise<Question> {
+    const question = await this.questionModel.findOne({ 
+      _id: id, 
+      isDeleted: false, 
+      isActive: true 
+    })
+    .select('-correct_answer -discussion_text -discussion_video -explanation') // Sembunyikan kunci & pembahasan
+    .populate('bab_key', 'name')
+    .exec();
+
+    if (!question) {
+      throw new NotFoundException('Soal tidak ditemukan atau sudah tidak aktif');
+    }
+    
+    return question;
+  }
+
 
   async update(id: string, updateDto: UpdateQuestionDto): Promise<Question> {
     const updated = await this.questionModel.findByIdAndUpdate(

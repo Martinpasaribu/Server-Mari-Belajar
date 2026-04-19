@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -10,6 +11,7 @@ import { CreateBabDto } from './dto/create-bab.dto';
 import { UpdateBabDto } from './dto/update-bab.dto';
 import slugify from 'slugify';
 import { MediaService } from '../media/media.service';
+import { CodeSectionGenerator } from 'src/common/utils/generator';
 
 @Injectable()
 export class BabService {
@@ -23,6 +25,8 @@ export class BabService {
     // 1. Generate Slug dari nama
     const slug = slugify(createDto.name, { lower: true });
 
+    const processedSections = CodeSectionGenerator(createDto.section || []);
+
     // 2. Cek duplikasi slug
     const existing = await this.babModel.findOne({ slug, sub_category_key: createDto.sub_category_key });
     if (existing) throw new ConflictException('Nama Bab sudah ada di sub-kategori ini');
@@ -31,6 +35,7 @@ export class BabService {
     const newBab = new this.babModel({
       ...createDto,
       slug,
+      section: processedSections,
     });
 
     return await newBab.save();
@@ -60,8 +65,27 @@ export class BabService {
 
     return {
       questions: questions,
-      duration: bab.duration || 30
+      duration: bab.duration || 30,
+      bab
     };
+  }
+
+  async findQuestionsByBabAdmin(id: string): Promise<any> {
+    const bab = await this.babModel
+      .findOne({ _id: id, isDeleted: false })
+      .populate({
+        path: 'question_keys',
+        match: { isDeleted: false },
+        // Melakukan nested populate di sini
+        populate: {
+          path: 'bab_key', // Sesuaikan dengan nama field di Question schema kamu
+          model: 'Bab',    // Opsional: sebutkan modelnya jika relasinya cross-collection
+          select: 'name title' // Opsional: pilih field tertentu saja agar tidak berat
+        }
+      })
+      .exec();
+
+    return bab;
   }
 
   async findQuestionsByBabGuest(id: string): Promise<any> {
@@ -184,6 +208,8 @@ async update(id: string, updateDto: UpdateBabDto): Promise<Bab> {
     (updateDto as any).slug = slugify(updateDto.name, { lower: true });
   }
 
+
+
   // 3. Destruktur data untuk memisahkan field internal jika terbawa dari frontend
   const { _id, id: temp, __v, ...cleanData } = updateDto as any;
 
@@ -206,10 +232,13 @@ async update(id: string, updateDto: UpdateBabDto): Promise<Bab> {
     console.error('Media cleanup error:', error);
   }
 
+  const processedSections = CodeSectionGenerator(updateDto.section || []);
+
+
   // 5. Eksekusi Update ke Database
   const updatedBab = await this.babModel.findByIdAndUpdate(
     id,
-    { $set: cleanData },
+    { $set: { ...cleanData, section: processedSections } },
     { new: true, runValidators: true }
   ).exec();
 

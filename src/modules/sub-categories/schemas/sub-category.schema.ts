@@ -29,6 +29,12 @@ export class SubCategory extends Document {
   @Prop({ default: '' })
   sub_description!: string;
 
+  @Prop({ default: '' })
+  description_base!: string;
+
+  @Prop({ default: '' })
+  sub_description_base!: string;
+
   // --- FIELD PENDUKUNG ENROLLMENT & AKSES ---
   
   @Prop({ default: false })

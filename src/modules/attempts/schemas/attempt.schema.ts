@@ -31,6 +31,15 @@ export class Attempt extends Document {
   @Prop({ type: [UserAnswerSchema], default: [] })
   answers!: UserAnswer[];
 
+  // Di dalam attempt.schema.ts
+  @Prop({ type: [{
+    section_name: String,
+    correct: Number,
+    total: Number,
+    score: Number
+  }], default: [] })
+  section_performance!: any[];
+
   @Prop({ default: 0 })
   total_score!: number; // Skor akhir (0-100)
 
