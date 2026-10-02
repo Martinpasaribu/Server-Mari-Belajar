@@ -110,6 +110,9 @@ export class Question extends Document {
   @Prop({ type: MediaObjectSchema })
   discussion_video!: MediaObject; // Pembahasan versi video (opsional)
 
+  @Prop({ type: MediaObjectSchema })
+  discussion_image!: MediaObject;
+
   // --- SYSTEM ---
   @Prop({ default: 0 })
   order!: number; // Urutan nomor soal

@@ -116,6 +116,11 @@ export class CreateQuestionDto {
   @Type(() => MediaObjectDto)
   discussion_video?: MediaObjectDto;
 
+  @ApiProperty({ type: MediaObjectDto, required: false })
+  @IsOptional()
+  @Type(() => MediaObjectDto)
+  discussion_image?: MediaObjectDto;
+
   @IsNumber()
   @IsOptional()
   order?: number;
