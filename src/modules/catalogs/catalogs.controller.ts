@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Controller, Get, Query, Param } from '@nestjs/common';
@@ -18,6 +19,16 @@ export class CatalogController {
   }
 
   // Mengambil data catalog berdasarkaan id categpry
+    @Get('sub-categories')
+    async findListSubCategories(@Param('id') id: string) {
+    const data = await this.catalogService.getCatalogsWithBabCount();
+    return {
+      success: true,
+      message: 'Katalog berhasil dimuat',
+      data: data
+    };
+  }
+
   @Get('category/:id')
   async findListCatalogsByCategory(@Param('id') id: string) {
     const data = await this.catalogService.findListCatalogsByCategory(id);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -17,6 +18,54 @@ export class CatalogService {
     @InjectModel(Category.name) private categoryModel: Model<Category>,
   ) {}
 
+
+  /**
+   * Mengambil daftar sub-category beserta jumlah bab yang terdaftar di dalamnya.
+   * Bisa difilter opsional berdasarkan query tertentu.
+   */
+  async getCatalogsWithBabCount(query: Record<string, any> = {}) {
+    return await this.subCategoryModel.aggregate([
+      {
+        $match: {
+          isDeleted: false,
+          isActive: true,
+          ...query,
+        },
+      },
+      {
+        $lookup: {
+          from: 'babs', // Pastikan nama collection 'babs' sesuai di MongoDB Anda
+          let: { subCatId: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {$and: [
+                    { $eq: ['$sub_category_key', '$$subCatId'] },
+                    { $eq: ['$isDeleted', false] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'babs',
+        },
+      },
+      {
+        $addFields: {
+          babCount: { $size: '$babs' }, // Menyisipkan field jumlah bab
+        },
+      },
+      {
+        $project: {
+          babs: 0, // Sembunyikan array array bab detail agar response tetap efisien
+        },
+      },
+      {
+        $sort: { order: 1 },
+      },
+    ]);
+  }
+  
   /**
    * Mengambil semua katalog (Sub-Category) yang aktif
    * Data ini akan ditampilkan di Dashboard untuk user pilih/beli

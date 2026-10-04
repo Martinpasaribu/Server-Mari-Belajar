@@ -43,7 +43,7 @@ import { MailerModule } from './modules/mailer/mailer.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_USER_URI'),
+        uri: config.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
       connectionName: 'usersConnection', // 👈 penting!
