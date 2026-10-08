@@ -11,7 +11,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string): Promise<any> {
-    // Fungsi login ini harus ada di AuthService kamu
     const user = await this.authService.login({ email, password });
     if (!user) {
       throw new UnauthorizedException('Email atau password salah');
